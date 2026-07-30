@@ -12,6 +12,8 @@ interface TrackResult {
   delivery_address: string;
   vehicle_type: VehicleType;
   stops: RouteStop[];
+  receiver_name: string;
+  receiver_phone: string;
   created_at: string;
   updated_at: string;
 }
@@ -119,6 +121,11 @@ export default async function TrackPage({ params }: { params: { id: string } }) 
                 <p className="text-ink/80">{data.delivery_address}</p>
               </div>
             </div>
+          </div>
+
+          <div className="mt-6 border-t-2 border-line pt-4">
+            <p className="font-mono-track text-xs uppercase text-ink/50">Receiver</p>
+            <p className="text-ink/80">{data.receiver_name} · {data.receiver_phone}</p>
           </div>
 
           {!isException && STAGES.length > 0 && (

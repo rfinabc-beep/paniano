@@ -295,6 +295,8 @@ returns table (
   delivery_address text,
   vehicle_type text,
   stops jsonb,
+  receiver_name text,
+  receiver_phone text,
   created_at timestamptz,
   updated_at timestamptz
 )
@@ -304,7 +306,7 @@ set search_path = public
 stable
 as $$
   select tracking_id, status, parcel_type, pickup_address, delivery_address,
-         vehicle_type, stops, created_at, updated_at
+         vehicle_type, stops, receiver_name, receiver_phone, created_at, updated_at
   from public.parcels
   where tracking_id = p_tracking_id;
 $$;
