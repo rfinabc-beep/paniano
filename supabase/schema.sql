@@ -226,3 +226,7 @@ grant execute on function public.track_parcel_history(text) to anon, authenticat
 -- ---------- promote a user to rider or admin (run manually as needed) ----------
 -- update public.profiles set role = 'rider' where id = '<user-uuid>';
 -- update public.profiles set role = 'admin' where id = '<user-uuid>';
+
+-- ---------- allow admins to add custom timeline notes ----------
+create policy "status_history: admin can insert notes" on public.status_history
+  for insert with check (public.is_admin());

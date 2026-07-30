@@ -5,6 +5,7 @@ import { Parcel } from "@/lib/types";
 import SignOutButton from "../components/SignOutButton";
 import StatusBadge from "../components/StatusBadge";
 import AssignRider from "./AssignRider";
+import AddUpdate from "./AddUpdate";
 
 export default async function AdminPage() {
   const supabase = createClient();
@@ -52,6 +53,7 @@ export default async function AdminPage() {
                 currentStatus={p.status}
                 riders={riders ?? []}
               />
+              <AddUpdate parcelId={p.id} currentStatus={p.status} />
             </div>
           ))
         ) : (
