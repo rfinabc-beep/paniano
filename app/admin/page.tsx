@@ -6,6 +6,7 @@ import SignOutButton from "../components/SignOutButton";
 import StatusBadge from "../components/StatusBadge";
 import AssignRider from "./AssignRider";
 import AddUpdate from "./AddUpdate";
+import ShareTrackingActions from "./ShareTrackingActions";
 
 export default async function AdminPage() {
   const supabase = createClient();
@@ -62,6 +63,11 @@ export default async function AdminPage() {
                 statuses={statuses ?? []}
               />
               <AddUpdate parcelId={p.id} currentStatus={p.status} />
+              <ShareTrackingActions
+                trackingId={p.tracking_id}
+                receiverName={p.receiver_name}
+                receiverPhone={p.receiver_phone}
+              />
             </div>
           ))
         ) : (
