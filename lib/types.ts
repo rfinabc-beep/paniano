@@ -7,6 +7,15 @@ export type ParcelStatus =
   | "delivered"
   | "cancelled";
 
+export type VehicleType = "Bike" | "Car" | "Van" | "Truck";
+
+export const VEHICLE_TYPES: { type: VehicleType; label: string; blurb: string }[] = [
+  { type: "Bike", label: "Bike", blurb: "Small parcels, fastest" },
+  { type: "Car", label: "Car", blurb: "Medium parcels" },
+  { type: "Van", label: "Van", blurb: "Multiple/bulk parcels" },
+  { type: "Truck", label: "Truck", blurb: "Large or heavy shipments" },
+];
+
 export const STATUS_LABEL: Record<ParcelStatus, string> = {
   pending: "Booked",
   picked_up: "Picked up",
@@ -23,10 +32,14 @@ export interface Profile {
   created_at: string;
 }
 
+export interface RouteStop {
+  address: string;
+}
+
 export interface Parcel {
   id: string;
   tracking_id: string;
-  customer_id: string;
+  customer_id: string | null;
   sender_name: string;
   sender_phone: string;
   pickup_address: string;
@@ -37,6 +50,8 @@ export interface Parcel {
   weight_kg: number | null;
   price: number;
   status: ParcelStatus;
+  vehicle_type: VehicleType;
+  stops: RouteStop[];
   rider_id: string | null;
   created_at: string;
   updated_at: string;

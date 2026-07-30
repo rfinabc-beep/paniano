@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { ParcelStatus, StatusHistoryRow } from "@/lib/types";
+import { ParcelStatus, RouteStop, StatusHistoryRow, VehicleType } from "@/lib/types";
+import VehicleIcon from "../../components/VehicleIcon";
 
 interface TrackResult {
   tracking_id: string;
@@ -8,6 +9,8 @@ interface TrackResult {
   parcel_type: string;
   pickup_address: string;
   delivery_address: string;
+  vehicle_type: VehicleType;
+  stops: RouteStop[];
   created_at: string;
   updated_at: string;
 }
@@ -63,6 +66,7 @@ export default async function TrackPage({ params }: { params: { id: string } }) 
   const isCancelled = data?.status === "cancelled";
   const stageIndex = data ? STAGES.findIndex((s) => s.status === data.status) : -1;
   const progressPct = stageIndex <= 0 ? 4 : (stageIndex / (STAGES.length - 1)) * 100;
+  const stops = data?.stops ?? [];
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-10">
@@ -78,21 +82,43 @@ export default async function TrackPage({ params }: { params: { id: string } }) 
         <div className="card mt-6">
           <div className="flex items-center justify-between">
             <p className="font-display text-xl uppercase text-ink">{data.parcel_type}</p>
-            {isCancelled && (
+            {isCancelled ? (
               <span className="inline-block bg-rust/20 px-3 py-1 font-mono-track text-xs uppercase text-rust">
                 Cancelled
+              </span>
+            ) : (
+              <span className="flex items-center gap-2 font-mono-track text-xs uppercase text-ink/60">
+                <VehicleIcon type={data.vehicle_type} className="h-6 w-6 text-route" />
+                {data.vehicle_type}
               </span>
             )}
           </div>
 
-          <div className="grid gap-4 mt-4 text-ink/80">
-            <div>
-              <p className="font-mono-track text-xs uppercase text-ink/50">Pickup</p>
-              <p>{data.pickup_address}</p>
+          <div className="mt-4 flex flex-col">
+            <div className="flex items-center gap-3">
+              <span className="h-2.5 w-2.5 shrink-0 rounded-full border-2 border-route" />
+              <div>
+                <p className="font-mono-track text-xs uppercase text-ink/50">Pickup</p>
+                <p className="text-ink/80">{data.pickup_address}</p>
+              </div>
             </div>
-            <div>
-              <p className="font-mono-track text-xs uppercase text-ink/50">Delivery</p>
-              <p>{data.delivery_address}</p>
+            {stops.map((s, i) => (
+              <div key={i} className="mt-3 flex items-center gap-3 pl-[3px]">
+                <span className="h-2 w-2 shrink-0 rounded-full bg-line" />
+                <div>
+                  <p className="font-mono-track text-xs uppercase text-ink/50">Stop {i + 1}</p>
+                  <p className="text-ink/80">{s.address}</p>
+                </div>
+              </div>
+            ))}
+            <div className="mt-3 flex items-center gap-3">
+              <svg width="10" height="10" viewBox="0 0 24 24" className="shrink-0 text-rust">
+                <path d="M12 2 L20 20 H4 Z" fill="currentColor" />
+              </svg>
+              <div>
+                <p className="font-mono-track text-xs uppercase text-ink/50">Delivery</p>
+                <p className="text-ink/80">{data.delivery_address}</p>
+              </div>
             </div>
           </div>
 

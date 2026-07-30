@@ -46,6 +46,7 @@ export default async function AdminPage() {
                 <p><span className="text-ink/50">Pickup:</span> {p.pickup_address}</p>
                 <p><span className="text-ink/50">Delivery:</span> {p.delivery_address}</p>
                 <p><span className="text-ink/50">Price:</span> ৳{p.price}</p>
+                <p><span className="text-ink/50">Vehicle:</span> {p.vehicle_type}{p.stops?.length ? ` · ${p.stops.length} extra stop${p.stops.length > 1 ? "s" : ""}` : ""}</p>
               </div>
               <AssignRider
                 parcelId={p.id}
