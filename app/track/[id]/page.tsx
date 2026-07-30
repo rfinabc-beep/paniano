@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { RouteStop, StatusDef, StatusHistoryRow, VehicleType } from "@/lib/types";
 import VehicleIcon from "../../components/VehicleIcon";
+import ShareLink from "./ShareLink";
 
 interface TrackResult {
   tracking_id: string;
@@ -194,6 +195,8 @@ export default async function TrackPage({ params }: { params: { id: string } }) 
           )}
         </div>
       )}
+
+      {data && !error && <ShareLink trackingId={params.id} />}
     </main>
   );
 }
