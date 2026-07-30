@@ -15,7 +15,7 @@ export default function SignOutButton() {
 
   return (
     <button onClick={handleSignOut} className="font-display text-sm uppercase tracking-wide text-ink/60 hover:text-rust">
-      লগআউট
+      Sign out
     </button>
   );
 }

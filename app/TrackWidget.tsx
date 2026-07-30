@@ -19,11 +19,11 @@ export default function TrackWidget() {
       <input
         value={trackingId}
         onChange={(e) => setTrackingId(e.target.value)}
-        placeholder="ট্র্যাকিং আইডি লিখুন, যেমন: PT12AB34CD"
+        placeholder="Enter tracking ID, e.g. PT12AB34CD"
         className="input-field font-mono-track"
       />
       <button type="submit" className="btn-primary">
-        ট্র্যাক করুন
+        Track
       </button>
     </form>
   );

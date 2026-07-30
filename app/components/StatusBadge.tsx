@@ -1,4 +1,4 @@
-import { ParcelStatus, STATUS_LABEL_BN } from "@/lib/types";
+import { ParcelStatus, STATUS_LABEL } from "@/lib/types";
 
 const STYLES: Record<ParcelStatus, string> = {
   pending: "bg-line text-ink",
@@ -11,7 +11,7 @@ const STYLES: Record<ParcelStatus, string> = {
 export default function StatusBadge({ status }: { status: ParcelStatus }) {
   return (
     <span className={`inline-block px-3 py-1 font-mono-track text-xs uppercase ${STYLES[status]}`}>
-      {STATUS_LABEL_BN[status]}
+      {STATUS_LABEL[status]}
     </span>
   );
 }

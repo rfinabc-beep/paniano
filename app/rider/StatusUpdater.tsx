@@ -6,9 +6,9 @@ import { createClient } from "@/lib/supabase/client";
 import { ParcelStatus } from "@/lib/types";
 
 const NEXT_STATUS: Partial<Record<ParcelStatus, { next: ParcelStatus; label: string }>> = {
-  pending: { next: "picked_up", label: "পিকআপ সম্পন্ন করুন" },
-  picked_up: { next: "in_transit", label: "যাত্রা শুরু করুন" },
-  in_transit: { next: "delivered", label: "ডেলিভারি সম্পন্ন করুন" },
+  pending: { next: "picked_up", label: "Mark as picked up" },
+  picked_up: { next: "in_transit", label: "Start delivery" },
+  in_transit: { next: "delivered", label: "Mark as delivered" },
 };
 
 export default function StatusUpdater({ parcelId, status }: { parcelId: string; status: ParcelStatus }) {
@@ -28,7 +28,7 @@ export default function StatusUpdater({ parcelId, status }: { parcelId: string; 
 
   return (
     <button onClick={handleClick} disabled={loading} className="btn-secondary disabled:opacity-50">
-      {loading ? "আপডেট হচ্ছে..." : step.label}
+      {loading ? "Updating..." : step.label}
     </button>
   );
 }

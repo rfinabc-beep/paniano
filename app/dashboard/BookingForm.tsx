@@ -18,7 +18,7 @@ export default function BookingForm({ userId }: { userId: string }) {
     receiver_name: "",
     receiver_phone: "",
     delivery_address: "",
-    parcel_type: "ডকুমেন্ট",
+    parcel_type: "Document",
     weight_kg: "1",
   });
 
@@ -62,7 +62,7 @@ export default function BookingForm({ userId }: { userId: string }) {
       receiver_name: "",
       receiver_phone: "",
       delivery_address: "",
-      parcel_type: "ডকুমেন্ট",
+      parcel_type: "Document",
       weight_kg: "1",
     });
     router.refresh();
@@ -71,7 +71,7 @@ export default function BookingForm({ userId }: { userId: string }) {
   if (!open) {
     return (
       <button onClick={() => setOpen(true)} className="btn-primary">
-        + নতুন বুকিং
+        + New booking
       </button>
     );
   }
@@ -83,14 +83,14 @@ export default function BookingForm({ userId }: { userId: string }) {
           required
           value={form.sender_name}
           onChange={(e) => update("sender_name", e.target.value)}
-          placeholder="প্রেরকের নাম"
+          placeholder="Sender name"
           className="input-field"
         />
         <input
           required
           value={form.sender_phone}
           onChange={(e) => update("sender_phone", e.target.value)}
-          placeholder="প্রেরকের মোবাইল"
+          placeholder="Sender mobile"
           className="input-field"
         />
       </div>
@@ -98,7 +98,7 @@ export default function BookingForm({ userId }: { userId: string }) {
         required
         value={form.pickup_address}
         onChange={(e) => update("pickup_address", e.target.value)}
-        placeholder="পিকআপ ঠিকানা"
+        placeholder="Pickup address"
         className="input-field"
       />
 
@@ -107,14 +107,14 @@ export default function BookingForm({ userId }: { userId: string }) {
           required
           value={form.receiver_name}
           onChange={(e) => update("receiver_name", e.target.value)}
-          placeholder="প্রাপকের নাম"
+          placeholder="Receiver name"
           className="input-field"
         />
         <input
           required
           value={form.receiver_phone}
           onChange={(e) => update("receiver_phone", e.target.value)}
-          placeholder="প্রাপকের মোবাইল"
+          placeholder="Receiver mobile"
           className="input-field"
         />
       </div>
@@ -122,7 +122,7 @@ export default function BookingForm({ userId }: { userId: string }) {
         required
         value={form.delivery_address}
         onChange={(e) => update("delivery_address", e.target.value)}
-        placeholder="ডেলিভারি ঠিকানা"
+        placeholder="Delivery address"
         className="input-field"
       />
 
@@ -132,11 +132,11 @@ export default function BookingForm({ userId }: { userId: string }) {
           onChange={(e) => update("parcel_type", e.target.value)}
           className="input-field"
         >
-          <option>ডকুমেন্ট</option>
-          <option>পোশাক</option>
-          <option>ইলেকট্রনিক্স</option>
-          <option>খাবার</option>
-          <option>অন্যান্য</option>
+          <option>Document</option>
+          <option>Clothing</option>
+          <option>Electronics</option>
+          <option>Food</option>
+          <option>Other</option>
         </select>
         <input
           required
@@ -145,7 +145,7 @@ export default function BookingForm({ userId }: { userId: string }) {
           step="0.1"
           value={form.weight_kg}
           onChange={(e) => update("weight_kg", e.target.value)}
-          placeholder="ওজন (কেজি)"
+          placeholder="Weight (kg)"
           className="input-field"
         />
       </div>
@@ -154,10 +154,10 @@ export default function BookingForm({ userId }: { userId: string }) {
 
       <div className="flex gap-3">
         <button type="submit" disabled={loading} className="btn-primary disabled:opacity-50">
-          {loading ? "বুক হচ্ছে..." : "বুকিং নিশ্চিত করুন"}
+          {loading ? "Booking..." : "Confirm booking"}
         </button>
         <button type="button" onClick={() => setOpen(false)} className="btn-secondary">
-          বাতিল
+          Cancel
         </button>
       </div>
     </form>

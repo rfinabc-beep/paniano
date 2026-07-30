@@ -24,12 +24,12 @@ export default async function DashboardPage() {
     <main className="mx-auto max-w-4xl px-6 py-10">
       <div className="flex items-center justify-between">
         <Link href="/" className="font-display text-2xl uppercase tracking-wide text-ink">
-          পথ<span className="text-rust">.</span>
+          Logi<span className="text-rust">Express</span>
         </Link>
         <SignOutButton />
       </div>
 
-      <h1 className="mt-8 font-display text-3xl uppercase tracking-wide text-ink">আমার পার্সেল</h1>
+      <h1 className="mt-8 font-display text-3xl uppercase tracking-wide text-ink">My parcels</h1>
       <div className="mt-4">
         <BookingForm userId={user.id} />
       </div>
@@ -50,7 +50,7 @@ export default async function DashboardPage() {
             </Link>
           ))
         ) : (
-          <p className="card text-ink/60">এখনো কোনো বুকিং নেই। উপরের বাটন থেকে প্রথম বুকিং করুন।</p>
+          <p className="card text-ink/60">No bookings yet. Use the button above to make your first booking.</p>
         )}
       </div>
     </main>

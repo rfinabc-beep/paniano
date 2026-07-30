@@ -25,12 +25,12 @@ export default async function RiderPage() {
     <main className="mx-auto max-w-4xl px-6 py-10">
       <div className="flex items-center justify-between">
         <Link href="/" className="font-display text-2xl uppercase tracking-wide text-ink">
-          পথ<span className="text-rust">.</span>
+          Logi<span className="text-rust">Express</span>
         </Link>
         <SignOutButton />
       </div>
 
-      <h1 className="mt-8 font-display text-3xl uppercase tracking-wide text-ink">আমার ডেলিভারি তালিকা</h1>
+      <h1 className="mt-8 font-display text-3xl uppercase tracking-wide text-ink">My deliveries</h1>
 
       <div className="mt-6 flex flex-col gap-3">
         {(parcels as Parcel[] | null)?.length ? (
@@ -41,10 +41,10 @@ export default async function RiderPage() {
                 <StatusBadge status={p.status} />
               </div>
               <div className="grid gap-2 text-sm text-ink/80 md:grid-cols-2">
-                <p><span className="text-ink/50">পিকআপ:</span> {p.pickup_address}</p>
-                <p><span className="text-ink/50">ডেলিভারি:</span> {p.delivery_address}</p>
-                <p><span className="text-ink/50">প্রাপক:</span> {p.receiver_name} ({p.receiver_phone})</p>
-                <p><span className="text-ink/50">ওজন:</span> {p.weight_kg} কেজি</p>
+                <p><span className="text-ink/50">Pickup:</span> {p.pickup_address}</p>
+                <p><span className="text-ink/50">Delivery:</span> {p.delivery_address}</p>
+                <p><span className="text-ink/50">Receiver:</span> {p.receiver_name} ({p.receiver_phone})</p>
+                <p><span className="text-ink/50">Weight:</span> {p.weight_kg} kg</p>
               </div>
               <div>
                 <StatusUpdater parcelId={p.id} status={p.status} />
@@ -52,7 +52,7 @@ export default async function RiderPage() {
             </div>
           ))
         ) : (
-          <p className="card text-ink/60">আপাতত কোনো পার্সেল বরাদ্দ নেই।</p>
+          <p className="card text-ink/60">No parcels assigned right now.</p>
         )}
       </div>
     </main>

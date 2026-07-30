@@ -7,12 +7,12 @@ export type ParcelStatus =
   | "delivered"
   | "cancelled";
 
-export const STATUS_LABEL_BN: Record<ParcelStatus, string> = {
-  pending: "বুকিং হয়েছে",
-  picked_up: "পিকআপ হয়েছে",
-  in_transit: "পথে আছে",
-  delivered: "ডেলিভারি সম্পন্ন",
-  cancelled: "বাতিল হয়েছে",
+export const STATUS_LABEL: Record<ParcelStatus, string> = {
+  pending: "Booked",
+  picked_up: "Picked up",
+  in_transit: "In transit",
+  delivered: "Delivered",
+  cancelled: "Cancelled",
 };
 
 export interface Profile {

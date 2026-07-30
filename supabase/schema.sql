@@ -71,7 +71,7 @@ create table if not exists public.parcels (
   receiver_name text not null,
   receiver_phone text not null,
   delivery_address text not null,
-  parcel_type text not null default 'ডকুমেন্ট',
+  parcel_type text not null default 'Document',
   weight_kg numeric,
   price numeric not null default 0,
   status text not null default 'pending'

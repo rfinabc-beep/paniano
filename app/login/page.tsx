@@ -35,7 +35,7 @@ function LoginForm() {
 
     if (signInError || !data.user) {
       setLoading(false);
-      setError(signInError?.message ?? "লগইন ব্যর্থ হয়েছে");
+      setError(signInError?.message ?? "Login failed");
       return;
     }
 
@@ -63,9 +63,9 @@ function LoginForm() {
   return (
     <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-6 py-16">
       <Link href="/" className="mb-8 font-display text-2xl uppercase tracking-wide text-ink">
-        পথ<span className="text-rust">.</span>
+        Logi<span className="text-rust">Express</span>
       </Link>
-      <h1 className="font-display text-3xl uppercase tracking-wide text-ink">লগইন করুন</h1>
+      <h1 className="font-display text-3xl uppercase tracking-wide text-ink">Log in</h1>
 
       <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-4">
         <input
@@ -73,7 +73,7 @@ function LoginForm() {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="ইমেইল"
+          placeholder="Email"
           className="input-field"
         />
         <input
@@ -81,21 +81,21 @@ function LoginForm() {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="পাসওয়ার্ড"
+          placeholder="Password"
           className="input-field"
         />
 
         {error && <p className="text-sm text-rust">{error}</p>}
 
         <button type="submit" disabled={loading} className="btn-primary mt-2 disabled:opacity-50">
-          {loading ? "অপেক্ষা করুন..." : "লগইন"}
+          {loading ? "Please wait..." : "Log in"}
         </button>
       </form>
 
       <p className="mt-6 text-ink/60">
-        অ্যাকাউন্ট নেই?{" "}
+        Don't have an account?{" "}
         <Link href="/signup" className="text-route underline">
-          সাইন আপ করুন
+          Sign up
         </Link>
       </p>
     </main>

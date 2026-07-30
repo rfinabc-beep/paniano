@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { ParcelStatus, STATUS_LABEL_BN } from "@/lib/types";
+import { ParcelStatus, STATUS_LABEL } from "@/lib/types";
 
 const STATUSES: ParcelStatus[] = ["pending", "picked_up", "in_transit", "delivered", "cancelled"];
 
@@ -50,7 +50,7 @@ export default function AssignRider({
         disabled={loading}
         className="input-field py-2 text-sm"
       >
-        <option value="">রাইডার বরাদ্দ করুন</option>
+        <option value="">Assign rider</option>
         {riders.map((r) => (
           <option key={r.id} value={r.id}>
             {r.full_name ?? r.id.slice(0, 8)}
@@ -66,7 +66,7 @@ export default function AssignRider({
       >
         {STATUSES.map((s) => (
           <option key={s} value={s}>
-            {STATUS_LABEL_BN[s]}
+            {STATUS_LABEL[s]}
           </option>
         ))}
       </select>

@@ -46,24 +46,24 @@ export default function SignupPage() {
   return (
     <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-6 py-16">
       <Link href="/" className="mb-8 font-display text-2xl uppercase tracking-wide text-ink">
-        পথ<span className="text-rust">.</span>
+        Logi<span className="text-rust">Express</span>
       </Link>
-      <h1 className="font-display text-3xl uppercase tracking-wide text-ink">অ্যাকাউন্ট খুলুন</h1>
-      <p className="mt-2 text-ink/60">গ্রাহক হিসেবে বুকিং শুরু করতে নিচের তথ্য দিন।</p>
+      <h1 className="font-display text-3xl uppercase tracking-wide text-ink">Create your account</h1>
+      <p className="mt-2 text-ink/60">Sign up as a customer to start booking parcels.</p>
 
       <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-4">
         <input
           required
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
-          placeholder="পূর্ণ নাম"
+          placeholder="Full name"
           className="input-field"
         />
         <input
           required
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
-          placeholder="মোবাইল নম্বর"
+          placeholder="Mobile number"
           className="input-field"
         />
         <input
@@ -71,7 +71,7 @@ export default function SignupPage() {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="ইমেইল"
+          placeholder="Email"
           className="input-field"
         />
         <input
@@ -80,21 +80,21 @@ export default function SignupPage() {
           minLength={6}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="পাসওয়ার্ড (কমপক্ষে ৬ ক্যারেক্টার)"
+          placeholder="Password (min. 6 characters)"
           className="input-field"
         />
 
         {error && <p className="text-sm text-rust">{error}</p>}
 
         <button type="submit" disabled={loading} className="btn-primary mt-2 disabled:opacity-50">
-          {loading ? "অপেক্ষা করুন..." : "অ্যাকাউন্ট তৈরি করুন"}
+          {loading ? "Please wait..." : "Create account"}
         </button>
       </form>
 
       <p className="mt-6 text-ink/60">
-        আগে থেকে অ্যাকাউন্ট আছে?{" "}
+        Already have an account?{" "}
         <Link href="/login" className="text-route underline">
-          লগইন করুন
+          Log in
         </Link>
       </p>
     </main>

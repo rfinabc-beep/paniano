@@ -23,13 +23,13 @@ export default async function AdminPage() {
     <main className="mx-auto max-w-6xl px-6 py-10">
       <div className="flex items-center justify-between">
         <Link href="/" className="font-display text-2xl uppercase tracking-wide text-ink">
-          পথ<span className="text-rust">.</span>
+          Logi<span className="text-rust">Express</span>
         </Link>
         <SignOutButton />
       </div>
 
-      <h1 className="mt-8 font-display text-3xl uppercase tracking-wide text-ink">অ্যাডমিন ড্যাশবোর্ড</h1>
-      <p className="mt-1 text-ink/60">মোট বুকিং: {parcels?.length ?? 0}</p>
+      <h1 className="mt-8 font-display text-3xl uppercase tracking-wide text-ink">Admin dashboard</h1>
+      <p className="mt-1 text-ink/60">Total bookings: {parcels?.length ?? 0}</p>
 
       <div className="mt-6 flex flex-col gap-3">
         {(parcels as Parcel[] | null)?.length ? (
@@ -40,11 +40,11 @@ export default async function AdminPage() {
                 <StatusBadge status={p.status} />
               </div>
               <div className="grid gap-2 text-sm text-ink/80 md:grid-cols-2">
-                <p><span className="text-ink/50">প্রেরক:</span> {p.sender_name} ({p.sender_phone})</p>
-                <p><span className="text-ink/50">প্রাপক:</span> {p.receiver_name} ({p.receiver_phone})</p>
-                <p><span className="text-ink/50">পিকআপ:</span> {p.pickup_address}</p>
-                <p><span className="text-ink/50">ডেলিভারি:</span> {p.delivery_address}</p>
-                <p><span className="text-ink/50">মূল্য:</span> ৳{p.price}</p>
+                <p><span className="text-ink/50">Sender:</span> {p.sender_name} ({p.sender_phone})</p>
+                <p><span className="text-ink/50">Receiver:</span> {p.receiver_name} ({p.receiver_phone})</p>
+                <p><span className="text-ink/50">Pickup:</span> {p.pickup_address}</p>
+                <p><span className="text-ink/50">Delivery:</span> {p.delivery_address}</p>
+                <p><span className="text-ink/50">Price:</span> ৳{p.price}</p>
               </div>
               <AssignRider
                 parcelId={p.id}
@@ -55,7 +55,7 @@ export default async function AdminPage() {
             </div>
           ))
         ) : (
-          <p className="card text-ink/60">এখনো কোনো বুকিং নেই।</p>
+          <p className="card text-ink/60">No bookings yet.</p>
         )}
       </div>
     </main>
