@@ -161,9 +161,9 @@ export default async function TrackPage({ params }: { params: { id: string } }) 
                     key={s.key}
                     className={`font-mono-track text-[10px] uppercase leading-tight break-words ${
                       i === 0 ? "text-left" : i === STAGES.length - 1 ? "text-right" : "text-center"
-                    } ${i <= stageIndex ? "text-ink" : "text-ink/40"}`}
+                    } ${i <= stageIndex ? "text-ink" : "text-transparent"}`}
                   >
-                    {s.label}
+                    {i <= stageIndex ? s.label : "\u00A0"}
                   </span>
                 ))}
               </div>
