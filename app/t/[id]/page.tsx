@@ -145,14 +145,16 @@ export default async function TrackPage({ params }: { params: { id: string } }) 
                   </svg>
                 </div>
               </div>
-              <div className="flex justify-between">
+              <div
+                className="grid gap-x-1 gap-y-2"
+                style={{ gridTemplateColumns: `repeat(${STAGES.length}, minmax(0, 1fr))` }}
+              >
                 {STAGES.map((s, i) => (
                   <span
                     key={s.key}
-                    className={`font-mono-track text-[11px] uppercase ${
-                      i <= stageIndex ? "text-ink" : "text-ink/40"
-                    }`}
-                    style={{ maxWidth: "25%", textAlign: i === 0 ? "left" : i === STAGES.length - 1 ? "right" : "center" }}
+                    className={`font-mono-track text-[10px] uppercase leading-tight break-words ${
+                      i === 0 ? "text-left" : i === STAGES.length - 1 ? "text-right" : "text-center"
+                    } ${i <= stageIndex ? "text-ink" : "text-ink/40"}`}
                   >
                     {s.label}
                   </span>
