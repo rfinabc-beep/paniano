@@ -102,7 +102,7 @@ export default function BookingForm({
       }
 
       if (trackingId) {
-        router.push(`/track/${trackingId}`);
+        router.push(`/t/${trackingId}`);
       }
       return;
     }

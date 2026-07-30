@@ -4,7 +4,7 @@ import { useState } from "react";
 
 export default function ShareLink({ trackingId }: { trackingId: string }) {
   const [copied, setCopied] = useState(false);
-  const url = typeof window !== "undefined" ? `${window.location.origin}/track/${trackingId}` : "";
+  const url = typeof window !== "undefined" ? `${window.location.origin}/t/${trackingId}` : "";
 
   async function handleCopy() {
     try {

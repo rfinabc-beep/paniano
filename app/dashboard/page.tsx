@@ -41,7 +41,7 @@ export default async function DashboardPage() {
           (parcels as Parcel[]).map((p) => (
             <Link
               key={p.id}
-              href={`/track/${p.tracking_id}`}
+              href={`/t/${p.tracking_id}`}
               className="card flex flex-wrap items-center justify-between gap-3 hover:border-route"
             >
               <div>

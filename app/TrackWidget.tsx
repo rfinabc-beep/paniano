@@ -11,7 +11,7 @@ export default function TrackWidget() {
     e.preventDefault();
     const id = trackingId.trim();
     if (!id) return;
-    router.push(`/track/${encodeURIComponent(id)}`);
+    router.push(`/t/${encodeURIComponent(id)}`);
   }
 
   return (
