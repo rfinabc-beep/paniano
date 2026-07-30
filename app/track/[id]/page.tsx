@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { ParcelStatus, RouteStop, StatusHistoryRow, VehicleType } from "@/lib/types";
+import { RouteStop, StatusDef, StatusHistoryRow, VehicleType } from "@/lib/types";
 import VehicleIcon from "../../components/VehicleIcon";
 
 interface TrackResult {
   tracking_id: string;
-  status: ParcelStatus;
+  status: string;
   parcel_type: string;
   pickup_address: string;
   delivery_address: string;
@@ -15,15 +15,8 @@ interface TrackResult {
   updated_at: string;
 }
 
-const STAGES: { status: ParcelStatus; label: string }[] = [
-  { status: "pending", label: "Accepted" },
-  { status: "picked_up", label: "Picked Up" },
-  { status: "in_transit", label: "In Transit" },
-  { status: "delivered", label: "Delivered" },
-];
-
 interface TimelineGroup {
-  status: ParcelStatus;
+  status: string;
   entries: StatusHistoryRow[];
 }
 
@@ -63,8 +56,13 @@ export default async function TrackPage({ params }: { params: { id: string } }) 
   const history = (historyData as StatusHistoryRow[] | null) ?? [];
   const groups = groupHistory(history);
 
-  const isCancelled = data?.status === "cancelled";
-  const stageIndex = data ? STAGES.findIndex((s) => s.status === data.status) : -1;
+  const { data: statusesData } = await supabase.from("statuses").select("*");
+  const statuses = (statusesData as StatusDef[] | null) ?? [];
+  const statusDef = data ? statuses.find((s) => s.key === data.status) : undefined;
+  const isException = !!statusDef?.is_exception;
+
+  const STAGES = statuses.filter((s) => s.in_stepper).sort((a, b) => a.sort_order - b.sort_order);
+  const stageIndex = data ? STAGES.findIndex((s) => s.key === data.status) : -1;
   const progressPct = stageIndex <= 0 ? 4 : (stageIndex / (STAGES.length - 1)) * 100;
   const stops = data?.stops ?? [];
 
@@ -82,9 +80,9 @@ export default async function TrackPage({ params }: { params: { id: string } }) 
         <div className="card mt-6">
           <div className="flex items-center justify-between">
             <p className="font-display text-xl uppercase text-ink">{data.parcel_type}</p>
-            {isCancelled ? (
+            {isException ? (
               <span className="inline-block bg-rust/20 px-3 py-1 font-mono-track text-xs uppercase text-rust">
-                Cancelled
+                {statusDef?.label ?? data.status}
               </span>
             ) : (
               <span className="flex items-center gap-2 font-mono-track text-xs uppercase text-ink/60">
@@ -122,7 +120,7 @@ export default async function TrackPage({ params }: { params: { id: string } }) 
             </div>
           </div>
 
-          {!isCancelled && (
+          {!isException && STAGES.length > 0 && (
             <div className="mt-10">
               <p className="font-display text-lg uppercase text-ink">Timeline</p>
 
@@ -149,7 +147,7 @@ export default async function TrackPage({ params }: { params: { id: string } }) 
               <div className="flex justify-between">
                 {STAGES.map((s, i) => (
                   <span
-                    key={s.status}
+                    key={s.key}
                     className={`font-mono-track text-[11px] uppercase ${
                       i <= stageIndex ? "text-ink" : "text-ink/40"
                     }`}
@@ -165,7 +163,7 @@ export default async function TrackPage({ params }: { params: { id: string } }) 
                 {groups.map((g, gi) => (
                   <li key={gi}>
                     <p className="font-display text-base uppercase text-ink">
-                      {STAGES.find((s) => s.status === g.status)?.label ?? g.status}
+                      {statuses.find((s) => s.key === g.status)?.label ?? g.status}
                     </p>
                     <ul className="mt-2 flex flex-col gap-2">
                       {g.entries.map((e) => (
@@ -181,7 +179,7 @@ export default async function TrackPage({ params }: { params: { id: string } }) 
             </div>
           )}
 
-          {isCancelled && groups.length > 0 && (
+          {isException && groups.length > 0 && (
             <div className="mt-8">
               <p className="font-display text-lg uppercase text-ink">Status history</p>
               <ul className="mt-4 flex flex-col gap-4 border-l-2 border-line pl-4">

@@ -60,6 +60,33 @@ create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function public.handle_new_user();
 
+-- ---------- statuses (admin-manageable) ----------
+create table if not exists public.statuses (
+  key text primary key,
+  label text not null,
+  sort_order integer not null default 0,
+  in_stepper boolean not null default true,
+  is_exception boolean not null default false,
+  default_note text,
+  created_at timestamptz not null default now()
+);
+
+alter table public.statuses enable row level security;
+
+create policy "statuses: anyone can view" on public.statuses
+  for select using (true);
+
+create policy "statuses: admin can manage" on public.statuses
+  for all using (public.is_admin()) with check (public.is_admin());
+
+insert into public.statuses (key, label, sort_order, in_stepper, is_exception, default_note) values
+  ('pending', 'Booked', 1, true, false, 'Order placed.'),
+  ('picked_up', 'Picked up', 2, true, false, 'Parcel picked up by rider.'),
+  ('in_transit', 'In transit', 3, true, false, 'Parcel is in transit.'),
+  ('delivered', 'Delivered', 4, true, false, 'Parcel delivered.'),
+  ('cancelled', 'Cancelled', 5, false, true, 'Booking cancelled.')
+on conflict (key) do nothing;
+
 -- ---------- parcels ----------
 create table if not exists public.parcels (
   id uuid primary key default gen_random_uuid(),
@@ -74,8 +101,7 @@ create table if not exists public.parcels (
   parcel_type text not null default 'Document',
   weight_kg numeric,
   price numeric not null default 0,
-  status text not null default 'pending'
-    check (status in ('pending', 'picked_up', 'in_transit', 'delivered', 'cancelled')),
+  status text not null default 'pending' references public.statuses (key),
   vehicle_type text not null default 'Bike'
     check (vehicle_type in ('Bike', 'Car', 'Van', 'Truck')),
   stops jsonb not null default '[]'::jsonb,
@@ -201,30 +227,25 @@ create policy "status_history: related users can view" on public.status_history
     )
   );
 
--- automatically log every status change with a default note
+-- automatically log every status change with a default note (from statuses table)
 create or replace function public.log_status_change()
 returns trigger
 language plpgsql
 security definer
 set search_path = public
 as $$
+declare
+  v_note text;
+  v_label text;
 begin
   if tg_op = 'INSERT' then
+    select default_note, label into v_note, v_label from public.statuses where key = new.status;
     insert into public.status_history (parcel_id, status, note)
-    values (new.id, new.status, 'Order placed.');
+    values (new.id, new.status, coalesce(v_note, 'Order placed.'));
   elsif new.status is distinct from old.status then
+    select default_note, label into v_note, v_label from public.statuses where key = new.status;
     insert into public.status_history (parcel_id, status, note)
-    values (
-      new.id,
-      new.status,
-      case new.status
-        when 'picked_up' then 'Parcel picked up by rider.'
-        when 'in_transit' then 'Parcel is in transit.'
-        when 'delivered' then 'Parcel delivered.'
-        when 'cancelled' then 'Booking cancelled.'
-        else null
-      end
-    );
+    values (new.id, new.status, coalesce(v_note, 'Status changed to ' || coalesce(v_label, new.status) || '.'));
   end if;
   return new;
 end;

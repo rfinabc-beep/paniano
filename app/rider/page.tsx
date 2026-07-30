@@ -14,11 +14,17 @@ export default async function RiderPage() {
 
   if (!user) redirect("/login");
 
+  const { data: statuses } = await supabase.from("statuses").select("*");
+  const stepperKeys = (statuses ?? [])
+    .filter((s) => s.in_stepper)
+    .sort((a, b) => a.sort_order - b.sort_order);
+  const activeKeys = stepperKeys.slice(0, -1).map((s) => s.key);
+
   const { data: parcels } = await supabase
     .from("parcels")
     .select("*")
     .eq("rider_id", user.id)
-    .in("status", ["pending", "picked_up", "in_transit"])
+    .in("status", activeKeys.length ? activeKeys : ["pending"])
     .order("created_at", { ascending: true });
 
   return (
@@ -38,7 +44,7 @@ export default async function RiderPage() {
             <div key={p.id} className="card flex flex-col gap-3">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <p className="font-mono-track text-sm text-rust">{p.tracking_id}</p>
-                <StatusBadge status={p.status} />
+                <StatusBadge status={p.status} statuses={statuses ?? []} />
               </div>
               <div className="grid gap-2 text-sm text-ink/80 md:grid-cols-2">
                 <p><span className="text-ink/50">Pickup:</span> {p.pickup_address}</p>
@@ -48,7 +54,7 @@ export default async function RiderPage() {
                 <p><span className="text-ink/50">Vehicle:</span> {p.vehicle_type}{p.stops?.length ? ` · ${p.stops.length} extra stop${p.stops.length > 1 ? "s" : ""}` : ""}</p>
               </div>
               <div>
-                <StatusUpdater parcelId={p.id} status={p.status} />
+                <StatusUpdater parcelId={p.id} status={p.status} statuses={statuses ?? []} />
               </div>
             </div>
           ))

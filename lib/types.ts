@@ -1,11 +1,15 @@
 export type Role = "customer" | "rider" | "admin";
 
-export type ParcelStatus =
-  | "pending"
-  | "picked_up"
-  | "in_transit"
-  | "delivered"
-  | "cancelled";
+export type ParcelStatus = string;
+
+export interface StatusDef {
+  key: string;
+  label: string;
+  sort_order: number;
+  in_stepper: boolean;
+  is_exception: boolean;
+  default_note: string | null;
+}
 
 export type VehicleType = "Bike" | "Car" | "Van" | "Truck";
 
@@ -15,14 +19,6 @@ export const VEHICLE_TYPES: { type: VehicleType; label: string; blurb: string }[
   { type: "Van", label: "Van", blurb: "Multiple/bulk parcels" },
   { type: "Truck", label: "Truck", blurb: "Large or heavy shipments" },
 ];
-
-export const STATUS_LABEL: Record<ParcelStatus, string> = {
-  pending: "Booked",
-  picked_up: "Picked up",
-  in_transit: "In transit",
-  delivered: "Delivered",
-  cancelled: "Cancelled",
-};
 
 export interface Profile {
   id: string;

@@ -20,6 +20,8 @@ export default async function DashboardPage() {
     .eq("customer_id", user.id)
     .order("created_at", { ascending: false });
 
+  const { data: statuses } = await supabase.from("statuses").select("*");
+
   return (
     <main className="mx-auto max-w-4xl px-6 py-10">
       <div className="flex items-center justify-between">
@@ -46,7 +48,7 @@ export default async function DashboardPage() {
                 <p className="font-mono-track text-sm text-rust">{p.tracking_id}</p>
                 <p className="mt-1 text-ink">{p.receiver_name} — {p.delivery_address}</p>
               </div>
-              <StatusBadge status={p.status} />
+              <StatusBadge status={p.status} statuses={statuses ?? []} />
             </Link>
           ))
         ) : (

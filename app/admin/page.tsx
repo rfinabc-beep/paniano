@@ -15,9 +15,10 @@ export default async function AdminPage() {
 
   if (!user) redirect("/login");
 
-  const [{ data: parcels }, { data: riders }] = await Promise.all([
+  const [{ data: parcels }, { data: riders }, { data: statuses }] = await Promise.all([
     supabase.from("parcels").select("*").order("created_at", { ascending: false }),
     supabase.from("profiles").select("id, full_name").eq("role", "rider"),
+    supabase.from("statuses").select("*"),
   ]);
 
   return (
@@ -29,7 +30,12 @@ export default async function AdminPage() {
         <SignOutButton />
       </div>
 
-      <h1 className="mt-8 font-display text-3xl uppercase tracking-wide text-ink">Admin dashboard</h1>
+      <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
+        <h1 className="font-display text-3xl uppercase tracking-wide text-ink">Admin dashboard</h1>
+        <Link href="/admin/statuses" className="btn-secondary">
+          Manage statuses
+        </Link>
+      </div>
       <p className="mt-1 text-ink/60">Total bookings: {parcels?.length ?? 0}</p>
 
       <div className="mt-6 flex flex-col gap-3">
@@ -38,7 +44,7 @@ export default async function AdminPage() {
             <div key={p.id} className="card flex flex-col gap-3">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <p className="font-mono-track text-sm text-rust">{p.tracking_id}</p>
-                <StatusBadge status={p.status} />
+                <StatusBadge status={p.status} statuses={statuses ?? []} />
               </div>
               <div className="grid gap-2 text-sm text-ink/80 md:grid-cols-2">
                 <p><span className="text-ink/50">Sender:</span> {p.sender_name} ({p.sender_phone})</p>
@@ -53,6 +59,7 @@ export default async function AdminPage() {
                 currentRiderId={p.rider_id}
                 currentStatus={p.status}
                 riders={riders ?? []}
+                statuses={statuses ?? []}
               />
               <AddUpdate parcelId={p.id} currentStatus={p.status} />
             </div>

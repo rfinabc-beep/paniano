@@ -3,24 +3,26 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { ParcelStatus, STATUS_LABEL } from "@/lib/types";
-
-const STATUSES: ParcelStatus[] = ["pending", "picked_up", "in_transit", "delivered", "cancelled"];
+import { StatusDef } from "@/lib/types";
 
 export default function AssignRider({
   parcelId,
   currentRiderId,
   currentStatus,
   riders,
+  statuses,
 }: {
   parcelId: string;
   currentRiderId: string | null;
-  currentStatus: ParcelStatus;
+  currentStatus: string;
   riders: { id: string; full_name: string | null }[];
+  statuses: StatusDef[];
 }) {
   const router = useRouter();
   const supabase = createClient();
   const [loading, setLoading] = useState(false);
+
+  const sortedStatuses = [...statuses].sort((a, b) => a.sort_order - b.sort_order);
 
   async function updateRider(riderId: string) {
     setLoading(true);
@@ -64,9 +66,9 @@ export default function AssignRider({
         disabled={loading}
         className="input-field py-2 text-sm"
       >
-        {STATUSES.map((s) => (
-          <option key={s} value={s}>
-            {STATUS_LABEL[s]}
+        {sortedStatuses.map((s) => (
+          <option key={s.key} value={s.key}>
+            {s.label}
           </option>
         ))}
       </select>
