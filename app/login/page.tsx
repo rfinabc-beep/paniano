@@ -1,0 +1,103 @@
+"use client";
+
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
+  );
+}
+
+function LoginForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const supabase = createClient();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    const { data, error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (signInError || !data.user) {
+      setLoading(false);
+      setError(signInError?.message ?? "লগইন ব্যর্থ হয়েছে");
+      return;
+    }
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", data.user.id)
+      .single();
+
+    setLoading(false);
+
+    const next = searchParams.get("next");
+    if (next) {
+      router.push(next);
+    } else if (profile?.role === "admin") {
+      router.push("/admin");
+    } else if (profile?.role === "rider") {
+      router.push("/rider");
+    } else {
+      router.push("/dashboard");
+    }
+    router.refresh();
+  }
+
+  return (
+    <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-6 py-16">
+      <Link href="/" className="mb-8 font-display text-2xl uppercase tracking-wide text-ink">
+        পথ<span className="text-rust">.</span>
+      </Link>
+      <h1 className="font-display text-3xl uppercase tracking-wide text-ink">লগইন করুন</h1>
+
+      <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-4">
+        <input
+          required
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="ইমেইল"
+          className="input-field"
+        />
+        <input
+          required
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="পাসওয়ার্ড"
+          className="input-field"
+        />
+
+        {error && <p className="text-sm text-rust">{error}</p>}
+
+        <button type="submit" disabled={loading} className="btn-primary mt-2 disabled:opacity-50">
+          {loading ? "অপেক্ষা করুন..." : "লগইন"}
+        </button>
+      </form>
+
+      <p className="mt-6 text-ink/60">
+        অ্যাকাউন্ট নেই?{" "}
+        <Link href="/signup" className="text-route underline">
+          সাইন আপ করুন
+        </Link>
+      </p>
+    </main>
+  );
+}

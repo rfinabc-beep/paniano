@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: "Barlow Condensed", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #f6f3ec;
+  color: #101820;
+}
+
+.font-mono-track {
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center rounded-none bg-route px-6 py-3 font-display text-lg uppercase tracking-wide text-paper transition-colors hover:bg-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-beacon focus-visible:ring-offset-2;
+}
+
+.btn-secondary {
+  @apply inline-flex items-center justify-center rounded-none border-2 border-ink px-6 py-3 font-display text-lg uppercase tracking-wide text-ink transition-colors hover:bg-ink hover:text-paper focus:outline-none focus-visible:ring-2 focus-visible:ring-beacon focus-visible:ring-offset-2;
+}
+
+.input-field {
+  @apply w-full border-2 border-line bg-paper px-4 py-3 font-body text-ink placeholder:text-ink/40 focus:border-route focus:outline-none;
+}
+
+.card {
+  @apply border-2 border-ink/10 bg-white/60 p-6;
+}
+
+@keyframes dash-move {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 36px 0;
+  }
+}
+
+.route-line {
+  height: 3px;
+  color: theme("colors.route");
+  animation: dash-move 1.4s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-line {
+    animation: none;
+  }
+}
