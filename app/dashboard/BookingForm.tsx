@@ -40,32 +40,49 @@ export default function BookingForm({
     const weight = parseFloat(form.weight_kg) || 1;
     const price = 60 + weight * 20;
 
-    const { data: inserted, error: insertError } = await supabase
-      .from("parcels")
-      .insert({
-        customer_id: userId ?? null,
-        sender_name: form.sender_name,
-        sender_phone: form.sender_phone,
-        pickup_address: form.pickup_address,
-        receiver_name: form.receiver_name,
-        receiver_phone: form.receiver_phone,
-        delivery_address: form.delivery_address,
-        parcel_type: form.parcel_type,
-        weight_kg: weight,
-        price,
-      })
-      .select("tracking_id")
-      .single();
+    if (!userId) {
+      const { data: trackingId, error: rpcError } = await supabase.rpc("book_guest_parcel", {
+        p_sender_name: form.sender_name,
+        p_sender_phone: form.sender_phone,
+        p_pickup_address: form.pickup_address,
+        p_receiver_name: form.receiver_name,
+        p_receiver_phone: form.receiver_phone,
+        p_delivery_address: form.delivery_address,
+        p_parcel_type: form.parcel_type,
+        p_weight_kg: weight,
+        p_price: price,
+      });
+
+      setLoading(false);
+
+      if (rpcError) {
+        setError(rpcError.message);
+        return;
+      }
+
+      if (trackingId) {
+        router.push(`/track/${trackingId}`);
+      }
+      return;
+    }
+
+    const { error: insertError } = await supabase.from("parcels").insert({
+      customer_id: userId,
+      sender_name: form.sender_name,
+      sender_phone: form.sender_phone,
+      pickup_address: form.pickup_address,
+      receiver_name: form.receiver_name,
+      receiver_phone: form.receiver_phone,
+      delivery_address: form.delivery_address,
+      parcel_type: form.parcel_type,
+      weight_kg: weight,
+      price,
+    });
 
     setLoading(false);
 
     if (insertError) {
       setError(insertError.message);
-      return;
-    }
-
-    if (!userId && inserted?.tracking_id) {
-      router.push(`/track/${inserted.tracking_id}`);
       return;
     }
 
