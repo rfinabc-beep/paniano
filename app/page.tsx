@@ -51,7 +51,7 @@ export default function HomePage() {
               From booking to delivery — see and control the whole journey in one place.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
-              <Link href="/signup" className="btn-primary">
+              <Link href="/book" className="btn-primary">
                 Book now
               </Link>
             </div>

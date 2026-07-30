@@ -64,7 +64,7 @@ create trigger on_auth_user_created
 create table if not exists public.parcels (
   id uuid primary key default gen_random_uuid(),
   tracking_id text unique not null default '',
-  customer_id uuid not null references public.profiles (id) on delete cascade,
+  customer_id uuid references public.profiles (id) on delete cascade,
   sender_name text not null,
   sender_phone text not null,
   pickup_address text not null,
@@ -126,6 +126,9 @@ create policy "parcels: customer can view own" on public.parcels
 
 create policy "parcels: customer can insert own" on public.parcels
   for insert with check (auth.uid() = customer_id);
+
+create policy "parcels: guest can insert" on public.parcels
+  for insert with check (customer_id is null);
 
 create policy "parcels: rider/admin can update" on public.parcels
   for update using (

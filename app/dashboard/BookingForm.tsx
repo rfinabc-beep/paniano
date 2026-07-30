@@ -4,10 +4,16 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
-export default function BookingForm({ userId }: { userId: string }) {
+export default function BookingForm({
+  userId,
+  startOpen = false,
+}: {
+  userId?: string;
+  startOpen?: boolean;
+}) {
   const router = useRouter();
   const supabase = createClient();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(startOpen);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -34,23 +40,32 @@ export default function BookingForm({ userId }: { userId: string }) {
     const weight = parseFloat(form.weight_kg) || 1;
     const price = 60 + weight * 20;
 
-    const { error: insertError } = await supabase.from("parcels").insert({
-      customer_id: userId,
-      sender_name: form.sender_name,
-      sender_phone: form.sender_phone,
-      pickup_address: form.pickup_address,
-      receiver_name: form.receiver_name,
-      receiver_phone: form.receiver_phone,
-      delivery_address: form.delivery_address,
-      parcel_type: form.parcel_type,
-      weight_kg: weight,
-      price,
-    });
+    const { data: inserted, error: insertError } = await supabase
+      .from("parcels")
+      .insert({
+        customer_id: userId ?? null,
+        sender_name: form.sender_name,
+        sender_phone: form.sender_phone,
+        pickup_address: form.pickup_address,
+        receiver_name: form.receiver_name,
+        receiver_phone: form.receiver_phone,
+        delivery_address: form.delivery_address,
+        parcel_type: form.parcel_type,
+        weight_kg: weight,
+        price,
+      })
+      .select("tracking_id")
+      .single();
 
     setLoading(false);
 
     if (insertError) {
       setError(insertError.message);
+      return;
+    }
+
+    if (!userId && inserted?.tracking_id) {
+      router.push(`/track/${inserted.tracking_id}`);
       return;
     }
 
@@ -156,9 +171,11 @@ export default function BookingForm({ userId }: { userId: string }) {
         <button type="submit" disabled={loading} className="btn-primary disabled:opacity-50">
           {loading ? "Booking..." : "Confirm booking"}
         </button>
-        <button type="button" onClick={() => setOpen(false)} className="btn-secondary">
-          Cancel
-        </button>
+        {open && !startOpen && (
+          <button type="button" onClick={() => setOpen(false)} className="btn-secondary">
+            Cancel
+          </button>
+        )}
       </div>
     </form>
   );
