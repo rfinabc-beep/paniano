@@ -13,6 +13,12 @@ const BASE_RATE: Record<VehicleType, number> = {
   Truck: 300,
 };
 
+function ordinal(n: number) {
+  const s = ["th", "st", "nd", "rd"];
+  const v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+}
+
 export default function BookingForm({
   userId,
   startOpen = false,
@@ -146,7 +152,7 @@ export default function BookingForm({
     <form onSubmit={handleSubmit} className="card mt-4 flex flex-col gap-6">
       {/* Route */}
       <div>
-        <p className="font-mono-track text-xs uppercase text-ink/50">Route (max. 6 stops)</p>
+        <p className="font-mono-track text-xs uppercase text-ink/50">Route (max. 6 deliveries)</p>
         <div className="mt-3 flex flex-col">
           <div className="flex items-center gap-3">
             <span className="h-2.5 w-2.5 shrink-0 rounded-full border-2 border-route" />
@@ -166,14 +172,14 @@ export default function BookingForm({
                 required
                 value={stop}
                 onChange={(e) => updateStop(i, e.target.value)}
-                placeholder={`Stop ${i + 1}`}
+                placeholder={`${ordinal(i + 1)} Delivery`}
                 className="input-field"
               />
               <button
                 type="button"
                 onClick={() => removeStop(i)}
                 className="shrink-0 font-mono-track text-xs uppercase text-rust"
-                aria-label="Remove stop"
+                aria-label="Remove delivery"
               >
                 Remove
               </button>
@@ -200,7 +206,7 @@ export default function BookingForm({
             onClick={addStop}
             className="mt-3 font-mono-track text-xs uppercase text-route hover:text-ink"
           >
-            + Add stop
+            + Add delivery
           </button>
         )}
       </div>

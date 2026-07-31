@@ -36,6 +36,12 @@ function groupHistory(history: StatusHistoryRow[]): TimelineGroup[] {
   return groups;
 }
 
+function ordinal(n: number) {
+  const s = ["th", "st", "nd", "rd"];
+  const v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+}
+
 function formatTime(iso: string) {
   return new Date(iso).toLocaleString("en-US", {
     month: "short",
@@ -107,7 +113,7 @@ export default async function TrackPage({ params }: { params: { id: string } }) 
               <div key={i} className="mt-3 flex items-center gap-3 pl-[3px]">
                 <span className="h-2 w-2 shrink-0 rounded-full bg-line" />
                 <div>
-                  <p className="font-mono-track text-xs uppercase text-ink/50">Stop {i + 1}</p>
+                  <p className="font-mono-track text-xs uppercase text-ink/50">{ordinal(i + 1)} Delivery</p>
                   <p className="text-ink/80">{s.address}</p>
                 </div>
               </div>
